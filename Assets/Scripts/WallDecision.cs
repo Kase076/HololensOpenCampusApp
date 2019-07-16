@@ -29,7 +29,7 @@ public class WallDecision : MonoBehaviour {
         }
 		if (CellingFrag == 1) {
 			fire_ai = this.GetComponent<FireAI> ();
-			fire_ai.celling = 1;
+			fire_ai.Celling = 1;
 		}
     }
 

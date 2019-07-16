@@ -44,19 +44,23 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
         get { return Nearwall; }
         set { Nearwall = value; }
     }
-    private int Celling;
-    public int celling
+
+    private int celling;
+    public int Celling
     {
-        get { return Celling; }
-        set { Celling = value; }
+        get { return celling; }
+        set { celling = value; }
     }
 
-    public bool DestroyedFlag = false;  
+    public bool DestroyedFlag = false;
+    public bool SpreadFlag = false;
 
     public Vector3 nextArea;
 
     [SerializeField]
     private GameObject fireball;
+    [SerializeField]
+    private GameObject WetObj;
 
     // Use this for initialization
     void Start()
@@ -73,16 +77,19 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        this.RootState.ChildState.Update();
-        if (this.NearWall != 1 && this.celling != 1)
+        if (!DestroyedFlag)
         {
-            if (_rigidbody.velocity.magnitude >= 10.0f)
+            this.RootState.ChildState.Update();
+            if (this.NearWall != 1 && this.celling != 1)
             {
-                this.RootState.ChangeChildState(FireState.Extinguished);
+                if (_rigidbody.velocity.magnitude >= 10.0f)
+                {
+                    this.RootState.ChangeChildState(FireState.Extinguished);
+                }
             }
+            //this.transform.localScale = default_size * fire_size;
+            time++;
         }
-        //this.transform.localScale = default_size * fire_size;
-        time++;
     }
 
     void FixedUpdate()
@@ -113,56 +120,64 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
 
     public void FireInstance()
     {
-        var new_fire = GameObject.Instantiate(fireball);
-        Vector3 tmp = this.transform.position;
-        float x = tmp.x + Random.Range(-0.6f, 0.6f);
-        float y = tmp.y + 0.1f;
-        float z = tmp.z + Random.Range(-0.6f, 0.6f);
-        new_fire.transform.position = new Vector3(x, y, z);
-        FireMeta.FireList.Add(new_fire);
-        ChildFireList.Add(new_fire);
-        FireAI child_fire_ai = new_fire.GetComponent<FireAI>();
-        child_fire_ai.ParentFire = this.gameObject;
-        //ネットワーク処理
-        //NetworkServer.Spawn(new_fire);
+        Debug.Log("Instancing...");
+        if (SpreadFlag == true)
+        {
+            Debug.Log("Instance method called");
+            var new_fire = GameObject.Instantiate(fireball);
+
+            //new_fire.transform.position = NextPositionCalculate(new_fire);
+            new_fire.transform.position = nextArea;
+
+            FireMeta.FireList.Add(new_fire);
+            ChildFireList.Add(new_fire);
+            FireAI child_fire_ai = new_fire.GetComponent<FireAI>();
+            child_fire_ai.ParentFire = this.gameObject;
+            //ネットワーク処理
+            //NetworkServer.Spawn(new_fire);
+        }
     }
 
     public void OnWallFireInstance()
     {
-        var new_fire = GameObject.Instantiate(fireball);
-        _rigidbody = new_fire.GetComponent<Rigidbody>();
-        //_rigidbody.useGravity = false;
-        _rigidbody.isKinematic = true;
-        Vector3 tmp = this.transform.position;
-        float x = tmp.x + Random.Range(-0.3f, 0.3f);
-        float y = tmp.y + Random.Range(0.3f, 0.5f);
-        float z = tmp.z + Random.Range(-0.3f, 0.3f);
-        new_fire.transform.position = new Vector3(x, y, z);
-        FireMeta.FireList.Add(new_fire);
-        ChildFireList.Add(new_fire);
-        FireAI child_fire_ai = new_fire.GetComponent<FireAI>();
-        child_fire_ai.ParentFire = this.gameObject;
-        //ネットワーク処理
-        //NetworkServer.Spawn(new_fire);
+        if (SpreadFlag)
+        {
+            var new_fire = GameObject.Instantiate(fireball);
+            _rigidbody = new_fire.GetComponent<Rigidbody>();
+            //_rigidbody.useGravity = false;
+            _rigidbody.isKinematic = true;
+
+            //new_fire.transform.position = NextPositionCalculate(new_fire);
+            new_fire.transform.position = nextArea;
+
+            FireMeta.FireList.Add(new_fire);
+            ChildFireList.Add(new_fire);
+            FireAI child_fire_ai = new_fire.GetComponent<FireAI>();
+            child_fire_ai.ParentFire = this.gameObject;
+            //ネットワーク処理
+            //NetworkServer.Spawn(new_fire);
+        }
     }
 
     public void OnCellingFireInstance()
     {
-        var new_fire = GameObject.Instantiate(fireball);
-        _rigidbody = new_fire.GetComponent<Rigidbody>();
-        _rigidbody.isKinematic = true;
-        //_rigidbody.useGravity = false;
-        Vector3 tmp = this.transform.position;
-        float x = tmp.x + Random.Range(-0.1f, 0.1f);
-        float y = tmp.y + Random.Range(0.05f, 0.2f);
-        float z = tmp.z + Random.Range(-0.1f, 0.1f);
-        new_fire.transform.position = new Vector3(x, y, z);
-        FireMeta.FireList.Add(new_fire);
-        ChildFireList.Add(new_fire);
-        FireAI child_fire_ai = new_fire.GetComponent<FireAI>();
-        child_fire_ai.ParentFire = this.gameObject;
-        //ネットワーク処理
-        //NetworkServer.Spawn(new_fire);
+        if (SpreadFlag)
+        {
+            var new_fire = GameObject.Instantiate(fireball);
+            _rigidbody = new_fire.GetComponent<Rigidbody>();
+            _rigidbody.isKinematic = true;
+            //_rigidbody.useGravity = false;
+
+            //new_fire.transform.position = NextPositionCalculate(new_fire);
+            new_fire.transform.position = nextArea;
+
+            FireMeta.FireList.Add(new_fire);
+            ChildFireList.Add(new_fire);
+            FireAI child_fire_ai = new_fire.GetComponent<FireAI>();
+            child_fire_ai.ParentFire = this.gameObject;
+            //ネットワーク処理
+            //NetworkServer.Spawn(new_fire);
+        }
     }
 
     //public void OnInputClicked(InputClickedEventData eventData)
@@ -170,6 +185,41 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
     //    //fire_size = fire_size * 0.5f;
     //    //fire_size = 0;
     //}
+
+    public void TriggerThis()
+    {
+        //fire_size = fire_size * 0.5f;
+        fire_size = 0;
+    }
+
+    //[Command]
+    public void CmdDestroyFire()
+    {
+        DestroyedFlag = true;
+        particle.Stop();
+        CmdWetIns();
+
+        //Destroy(this.gameObject);
+        //NetworkServer.Destroy(this.gameObject);
+    }
+
+    public void CmdWetIns()
+    {
+
+        var now_trs = GameObject.Instantiate(WetObj);
+        now_trs.transform.position = this.transform.position;
+        FireMeta.WetObject.Add(now_trs);
+        Debug.Log("Wet Object Instanced");
+    }
+
+    public Vector3 NextPositionCalculate(GameObject obj) {
+        Vector3 tmp = this.transform.position;
+        float x = tmp.x + Random.Range(-0.4f, 0.4f);
+        float y = tmp.y + Random.Range(0.05f, 0.2f);
+        float z = tmp.z + Random.Range(-0.4f, 0.4f);
+        return new Vector3(x, y, z);
+    }
+
 
     /// <summary>
     /// Floor Fire State
@@ -210,7 +260,7 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
 
         public override void Enter()
         {
-            this._model.time = 0;
+            //this._model.time = 0;
             current_fire_size = this._model.fire_size;
             Debug.Log("Grow");
         }
@@ -226,7 +276,7 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
                 Debug.Log("Start Extinguishing");
                 this.ChangeState(FireState.Extinguishing);
             }
-            if (this._model.time >= 800.0f)
+            if (this._model.time >= 500.0f)
             {
                 this.ChangeState(FireState.Spread);
             }
@@ -249,9 +299,11 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
         public override void Enter()
         {
             //Instantiate (this._model.fireball);
-            if (this._model.ChildFireList.Count < 1)
+            if (this._model.ChildFireList.Count < 2)
             {
+                Debug.Log("Spread");
                 this._model.FireInstance();
+                this._model.time = 0;
             }
         }
 
@@ -455,8 +507,6 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
     /// <summary>
     /// Extinguished State.
     /// </summary>
-    public enum ExtinguishedFire { }
-
     public class Extinguished : State<FireState, FireAI>
     {
         public Extinguished(FireAI owner) : base(owner) { }
@@ -502,21 +552,6 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
         {
 
         }
-    }
-
-    public void TriggerThis()
-    {
-        //fire_size = fire_size * 0.5f;
-        fire_size = 0;
-    }
-
-    //[Command]
-    public void CmdDestroyFire()
-    {
-        DestroyedFlag = true;
-        particle.Stop();
-        //Destroy(this.gameObject);
-        //NetworkServer.Destroy(this.gameObject);
     }
 
 }

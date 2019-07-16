@@ -21,7 +21,7 @@ GameObject:
   - component: {fileID: 4258734588714844}
   - component: {fileID: 198180422964326072}
   - component: {fileID: 199656458640424696}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FireEmbers
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -38,7 +38,7 @@ GameObject:
   - component: {fileID: 4025713132566722}
   - component: {fileID: 198212861745080372}
   - component: {fileID: 199962439295174978}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: FlamesParticleEffect
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -57,7 +57,7 @@ GameObject:
   - component: {fileID: 54512569052166804}
   - component: {fileID: 114959084933791260}
   - component: {fileID: 114222943627676926}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Fireball
   m_TagString: Fireball
   m_Icon: {fileID: 0}
@@ -74,7 +74,7 @@ GameObject:
   - component: {fileID: 4460997646997752}
   - component: {fileID: 198977181427860686}
   - component: {fileID: 199436504653286530}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -186,8 +186,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   DestroyedFlag: 0
+  SpreadFlag: 0
   nextArea: {x: 0, y: 0, z: 0}
   fireball: {fileID: 1575216658557418}
+  WetObj: {fileID: 1965204948462738, guid: 53a985523939e784cb9f0caa3f0b36b9, type: 2}
 --- !u!198 &198180422964326072
 ParticleSystem:
   m_ObjectHideFlags: 1
