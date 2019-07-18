@@ -19,12 +19,11 @@ public class GameController : MonoBehaviour {
 		
 	}
 
-    void InsFire() {
+    public void InsFire() {
         var new_fire = GameObject.Instantiate(fireball);
-        Vector3 tmp = this.transform.position;
-        float x = tmp.x + Random.Range(-1.0f, 1.0f);
-        float y = tmp.y + 0.1f;
-        float z = tmp.z + Random.Range(-1.0f, 1.0f);
+        float x = Random.Range(-1.0f, 1.0f);
+        float y = 0.1f;
+        float z = Random.Range(-1.0f, 1.0f);
         new_fire.transform.position = new Vector3(x, y, z);
         FireMeta.FireList.Add(new_fire);
     } 
