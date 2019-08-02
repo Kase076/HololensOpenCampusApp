@@ -553,7 +553,13 @@ PlayerSettings:
   webGLUseEmbeddedResources: 0
   webGLUseWasm: 0
   webGLCompressionFormat: 1
-  scriptingDefineSymbols: {}
+  scriptingDefineSymbols:
+    1: CROSS_PLATFORM_INPUT
+    4: CROSS_PLATFORM_INPUT;MOBILE_INPUT
+    7: CROSS_PLATFORM_INPUT;MOBILE_INPUT
+    14: MOBILE_INPUT
+    17: MOBILE_INPUT
+    20: MOBILE_INPUT
   platformArchitecture: {}
   scriptingBackend:
     Metro: 2
@@ -565,11 +571,11 @@ PlayerSettings:
   m_MobileRenderingPath: 1
   metroPackageName: Fire Fighter 3
   metroPackageVersion: 
-  metroCertificatePath: 
+  metroCertificatePath: D:\Document\UnityProject\Fire Fighter 3\Assets\WSATestCertificate.pfx
   metroCertificatePassword: 
-  metroCertificateSubject: 
-  metroCertificateIssuer: 
-  metroCertificateNotAfter: 0000000000000000
+  metroCertificateSubject: DefaultCompany
+  metroCertificateIssuer: DefaultCompany
+  metroCertificateNotAfter: 80284a714867d601
   metroApplicationDescription: Fire Fighter 3
   wsaImages: {}
   metroTileShortName: 
@@ -644,7 +650,7 @@ PlayerSettings:
   cloudServicesEnabled:
     UNet: 1
   facebookSdkVersion: 7.9.4
-  apiCompatibilityLevel: 2
+  apiCompatibilityLevel: 3
   cloudProjectId: 2c9f02cc-8061-401c-8dc4-7c75fd1ab01f
   projectName: Fire Fighter 3
   organizationId: s1522076gh

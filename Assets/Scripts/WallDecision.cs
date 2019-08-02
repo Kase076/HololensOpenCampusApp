@@ -15,6 +15,7 @@ public class WallDecision : MonoBehaviour {
 	public static int Failed;
 
 	FireAI fire_ai;
+    Rigidbody fire_rigid;
 
 	// Use this for initialization
 	void Start () {
@@ -23,10 +24,18 @@ public class WallDecision : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (NearWallFrag == 1) {
-			fire_ai = this.GetComponent<FireAI> ();
-			fire_ai.NearWall = 1;
+        if (NearWallFrag == 1)
+        {
+            fire_ai = this.GetComponent<FireAI>();
+            fire_ai.NearWall = 1;
+            fire_rigid = this.GetComponent<Rigidbody>();
+            fire_rigid.isKinematic = true;
         }
+        else {
+            fire_rigid = this.GetComponent<Rigidbody>();
+            fire_rigid.isKinematic = false;
+        }
+
 		if (CellingFrag == 1) {
 			fire_ai = this.GetComponent<FireAI> ();
 			fire_ai.Celling = 1;

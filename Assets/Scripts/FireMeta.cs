@@ -33,9 +33,6 @@ public class FireMeta : MonoBehaviour {
 	
 	// Update is called once per frame
 	void Update () {
-        if (FireList.Count < 1) {
-            gmctrl.InsFire();
-        }
 
         for (j = 0; j < WetObject.Count; j++)
         {
@@ -116,9 +113,9 @@ public class FireMeta : MonoBehaviour {
 	}
 
     public Vector3 RandomNextVector(Vector3 obj) {
-        float x = obj.x + Bias(Random.Range(-0.3f, 0.3f));
+        float x = obj.x + Bias(Random.Range(-0.4f, 0.4f));
         float y = obj.y + Bias(Random.Range(0.05f, 0.2f));
-        float z = obj.z + Bias(Random.Range(-0.3f, 0.3f));
+        float z = obj.z + Bias(Random.Range(-0.4f, 0.4f));
         return new Vector3(x, y, z);
     }
 

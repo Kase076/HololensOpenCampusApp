@@ -60,7 +60,9 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
     [SerializeField]
     private GameObject fireball;
     [SerializeField]
-    private GameObject WetObj;
+    private GameObject wetObj;
+    [SerializeField]
+    private float spread_time;
 
     // Use this for initialization
     void Start()
@@ -143,12 +145,16 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
         if (SpreadFlag)
         {
             var new_fire = GameObject.Instantiate(fireball);
-            _rigidbody = new_fire.GetComponent<Rigidbody>();
+            //_rigidbody = new_fire.GetComponent<Rigidbody>();
             //_rigidbody.useGravity = false;
-            _rigidbody.isKinematic = true;
+            //_rigidbody.isKinematic = true;
 
             //new_fire.transform.position = NextPositionCalculate(new_fire);
-            new_fire.transform.position = nextArea;
+            var now_pos = this.transform.position;
+            float x = now_pos.x + Random.Range(-0.1f, 0.1f);
+            float y = nextArea.y + Random.Range(0.2f, 0.4f);
+            float z = now_pos.z + Random.Range(-0.1f, 0.1f);
+            new_fire.transform.position = new Vector3(x, y, z);
 
             FireMeta.FireList.Add(new_fire);
             ChildFireList.Add(new_fire);
@@ -199,16 +205,21 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
         particle.Stop();
         CmdWetIns();
 
+        ScoreController.AddScore();
+
         //Destroy(this.gameObject);
         //NetworkServer.Destroy(this.gameObject);
     }
 
     public void CmdWetIns()
     {
-
-        var now_trs = GameObject.Instantiate(WetObj);
-        now_trs.transform.position = this.transform.position;
-        FireMeta.WetObject.Add(now_trs);
+        var wet = GameObject.Instantiate(wetObj);
+        wet.transform.position = this.transform.position;
+        FireMeta.WetObject.Add(wet);
+        if (NearWall == 1) {                              //壁なら非表示
+            var wet_rend = wet.GetComponentInChildren<MeshRenderer>();
+            wet_rend.enabled = false;
+        }
         Debug.Log("Wet Object Instanced");
     }
 
@@ -276,7 +287,7 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
                 Debug.Log("Start Extinguishing");
                 this.ChangeState(FireState.Extinguishing);
             }
-            if (this._model.time >= 500.0f)
+            if (this._model.time >= _model.spread_time)
             {
                 this.ChangeState(FireState.Spread);
             }
@@ -299,7 +310,7 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
         public override void Enter()
         {
             //Instantiate (this._model.fireball);
-            if (this._model.ChildFireList.Count < 2)
+            if (this._model.ChildFireList.Count < 1)
             {
                 Debug.Log("Spread");
                 this._model.FireInstance();
@@ -410,7 +421,7 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
                 Debug.Log("Start Extinguishing");
                 this.ChangeState(FireState.OnWallExtinguishing);
             }
-            if (this._model.time >= 500.0f)
+            if (this._model.time >= _model.spread_time)
             {
                 this.ChangeState(FireState.OnWallSpread);
             }
@@ -426,14 +437,22 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
     {
         public OnCeilingState(FireAI owner) : base(owner) { }
 
+        float current_fire_size;
+
         public override void Enter()
         {
-
+            this._model.time = 0;
+            current_fire_size = this._model.fire_size;
         }
 
         public override void Execute()
         {
-            Debug.Log("Warning On Celling");
+            //Debug.Log("Warning On Celling");
+            if (current_fire_size > this._model.fire_size)
+            {
+                Debug.Log("Start Extinguishing");
+                this.ChangeState(FireState.OnWallExtinguishing);
+            }
         }
 
         public override void Exit()
@@ -448,7 +467,7 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
 
         public override void Enter()
         {
-            if (this._model.ChildFireList.Count < 2)
+            if (this._model.ChildFireList.Count < 1)
             {
                 if (this._model.celling == 0)
                 {
