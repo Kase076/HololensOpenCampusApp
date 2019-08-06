@@ -196,6 +196,7 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
     {
         //fire_size = fire_size * 0.5f;
         fire_size = 0;
+        ScoreController.AddScore();
     }
 
     //[Command]
@@ -204,8 +205,6 @@ public class FireAI : /*AIModel<FireState, FireAI>,*/ MonoBehaviour
         DestroyedFlag = true;
         particle.Stop();
         CmdWetIns();
-
-        ScoreController.AddScore();
 
         //Destroy(this.gameObject);
         //NetworkServer.Destroy(this.gameObject);
