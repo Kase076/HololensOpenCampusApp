@@ -202,7 +202,7 @@ MonoBehaviour:
   nextArea: {x: 0, y: 0, z: 0}
   fireball: {fileID: 1575216658557418}
   wetObj: {fileID: 1331591043586494, guid: c75d3cdb34050dd42a00a4723654876d, type: 2}
-  spread_time: 300
+  spread_time: 400
 --- !u!198 &198180422964326072
 ParticleSystem:
   m_ObjectHideFlags: 1

@@ -128,7 +128,7 @@ public class FireMeta : MonoBehaviour {
 
     public float Bias(float param) {
         if (param < 0.1f) {
-            param *= 2.0f;
+            param *= 2.5f;
         }
 
         return param;
